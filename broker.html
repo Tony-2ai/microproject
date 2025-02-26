@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Stock Brokers</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0d0d0d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        .broker-card {
+            background: linear-gradient(135deg, #1a1a1a, #262626);
+            padding: 20px;
+            margin: 15px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.9);
+            transition: transform 0.3s ease-in-out;
+        }
+        .broker-card:hover {
+            transform: scale(1.05);
+        }
+        .broker-card h2 {
+            color: #ffcc00;
+        }
+        .broker-card p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .cta-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #ffcc00;
+            color: black;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .cta-button:hover {
+            background: #e6b800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Top Stock Brokers in India</h1>
+        <div class="broker-card">
+            <h2>Zerodha</h2>
+            <p>Low brokerage fees, user-friendly interface, and great research tools.</p>
+            <a href="https://zerodha.com/open-account" target="_blank" class="cta-button">Open Account</a>
+        </div>
+        <div class="broker-card">
+            <h2>Upstox</h2>
+            <p>Fast execution, competitive pricing, and seamless experience.</p>
+            <a href="https://upstox.com/open-account" target="_blank" class="cta-button">Open Account</a>
+        </div>
+        <div class="broker-card">
+            <h2>Angel One</h2>
+            <p>Comprehensive advisory services with smart trading solutions.</p>
+            <a href="https://www.angelone.in/open-demat-account" target="_blank" class="cta-button">Open Account</a>
+        </div>
+    </div>
+</body>
+</html>

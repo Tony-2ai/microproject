@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Gold Rates</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle, #1a1a1a, #000000);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        .section {
+            background: rgba(20, 20, 20, 0.9);
+            padding: 20px;
+            margin: 15px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+            transition: transform 0.3s ease-in-out;
+        }
+        .section:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+        canvas {
+            margin-top: 20px;
+            background: #222;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+        .glow-text {
+            color: #FFD700;
+            font-size: 1.5em;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Live Gold Market Watch</h1>
+        <div class="section">
+            <h2>Current Gold Rate</h2>
+            <p class="glow-text">₹<span id="goldPrice">Loading...</span> per gram</p>
+        </div>
+        <div class="section">
+            <h2>Gold Price Trends</h2>
+            <canvas id="goldChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        function renderGoldChart() {
+            const goldCtx = document.getElementById('goldChart').getContext('2d');
+            new Chart(goldCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                    datasets: [{
+                        label: 'Gold Price (per gram)',
+                        data: [4800, 4850, 4900, 4950, 5000],
+                        borderColor: '#FFD700',
+                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: 'white'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function fetchGoldPrice() {
+            document.getElementById('goldPrice').innerText = '5000'; // Mock Data
+        }
+
+        window.onload = function() {
+            renderGoldChart();
+            fetchGoldPrice();
+        };
+    </script>
+</body>
+</html>
