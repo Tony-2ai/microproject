@@ -6,31 +6,34 @@
     <title>Futuristic Investment Suggester</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@300;400;700&display=swap');
         body {
-            font-family: 'Orbitron', sans-serif;
-            background-color: #0d0d0d;
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
             color: #ffffff;
             display: flex;
-            flex-direction: column;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
         .container {
             display: flex;
-            flex-direction: row;
-            height: 100%;
+            width: 100%;
+            height: 100vh;
         }
         .sidebar {
             width: 250px;
-            background: linear-gradient(180deg, #1a1a1a, #0f0f0f);
+            background: rgba(20, 20, 20, 0.9);
             padding: 20px;
-            border-right: 2px solid #333;
+            border-right: 2px solid #444;
             box-shadow: 5px 0px 15px rgba(255, 204, 0, 0.5);
+            height: 100vh;
+            overflow-y: auto;
         }
         .sidebar h3 {
             color: #ffcc00;
             text-align: center;
+            text-shadow: 0px 0px 10px rgba(255, 204, 0, 0.8);
         }
         .sidebar ul {
             list-style: none;
@@ -38,28 +41,32 @@
         }
         .sidebar ul li {
             padding: 15px;
-            margin: 5px 0;
+            margin: 10px 0;
             text-align: center;
             font-weight: bold;
-            background: #262626;
-            border-radius: 5px;
+            background: rgba(38, 38, 38, 0.8);
+            border-radius: 10px;
             transition: all 0.3s ease-in-out;
             cursor: pointer;
+            color: #ffcc00;
+            box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.5);
         }
         .sidebar ul li:hover {
             background: #ffcc00;
             color: black;
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0px 0px 20px rgba(255, 204, 0, 0.9);
         }
         .content {
             flex: 1;
             padding: 40px;
             text-align: center;
-        }
-        .chart-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 30px auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin: 20px;
+            box-shadow: 0px 0px 20px rgba(255, 204, 0, 0.5);
+            overflow-y: auto;
         }
         .input-container {
             margin-bottom: 20px;
@@ -68,46 +75,41 @@
             align-items: center;
         }
         input {
-            padding: 10px;
-            width: 90%;
-            max-width: 300px;
-            border-radius: 5px;
+            padding: 12px;
+            width: 300px;
+            border-radius: 8px;
             border: none;
             text-align: center;
             font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transition: 0.3s;
+            outline: none;
+            box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.5);
         }
         button {
-            padding: 10px 15px;
+            padding: 12px 20px;
             margin-top: 10px;
-            border-radius: 5px;
+            border-radius: 8px;
             border: none;
             background: #ffcc00;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.5);
+            font-size: 16px;
+            color: #000;
         }
         .returns-container {
             margin-top: 20px;
             font-size: 18px;
+            padding: 20px;
+            background: rgba(38, 38, 38, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(255, 204, 0, 0.7);
         }
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 2px solid #333;
-                box-shadow: 0px 5px 15px rgba(255, 204, 0, 0.5);
-            }
-            .sidebar ul {
-                display: flex;
-                justify-content: space-around;
-            }
-            .sidebar ul li {
-                flex: 1;
-                text-align: center;
-            }
+        canvas {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -125,68 +127,38 @@
         <div class="content">
             <div class="input-container">
                 <input type="number" id="investmentAmount" placeholder="Enter amount in ₹">
-                <button onclick="calculateReturns()">Suggest Investment</button>
+                <button onclick="calculateReturns()">Show Suggestions</button>
             </div>
             <div class="returns-container" id="returnsInfo"></div>
-            <div class="chart-container">
-                <canvas id="investmentChart"></canvas>
-            </div>
+            <canvas id="investmentChart"></canvas>
         </div>
     </div>
     <script>
-        let ctx = document.getElementById('investmentChart').getContext('2d');
-        let investmentChart;
-        
+        function navigateTo(page) { window.location.href = page; }
         function calculateReturns() {
             let amount = document.getElementById('investmentAmount').value;
             if (!amount || amount <= 0) {
                 alert("Please enter a valid amount.");
                 return;
             }
-            let stockReturn = amount * 2.5;
-            let goldReturn = amount * 1.8;
-            let realEstateReturn = amount * 2.2;
-            let stockTime = "5 months";
-            let goldTime = "1 years";
-            let realEstateTime = "5 years";
-            
-            document.getElementById('returnsInfo').innerHTML = 
-                `<p>Stock Market: ₹${stockReturn} (in ${stockTime})</p>
-                 <p>Gold: ₹${goldReturn} (in ${goldTime})</p>
-                 <p>Real Estate: ₹${realEstateReturn} (in ${realEstateTime})</p>`;
-            
-            let projectedReturns = [stockReturn, goldReturn, realEstateReturn];
-            let labels = ['Stock Market', 'Gold', 'Real Estate'];
-            
-            if (investmentChart) {
-                investmentChart.destroy();
-            }
-            
-            investmentChart = new Chart(ctx, {
+            let returns = [
+                { type: 'Stock Market', value: Math.round(amount * 2.5), risk: 'High' },
+                { type: 'Gold', value: Math.round(amount * 1.8), risk: 'Medium' },
+                { type: 'Real Estate', value: Math.round(amount * 2.2), risk: 'Low' }
+            ];
+            document.getElementById('returnsInfo').innerHTML = returns.map(r => `<p>${r.type}: ₹${r.value} - <strong style="color: ${r.risk === 'High' ? 'red' : r.risk === 'Medium' ? 'orange' : 'green'}">Risk: ${r.risk}</strong></p>`).join('');
+            let ctx = document.getElementById('investmentChart').getContext('2d');
+            new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: returns.map(r => r.type),
                     datasets: [{
                         label: 'Projected Returns (₹)',
-                        data: projectedReturns,
-                        backgroundColor: ['rgba(255, 204, 0, 0.7)', 'rgba(204, 153, 0, 0.7)', 'rgba(153, 102, 0, 0.7)'],
-                        borderColor: '#ffcc00',
-                        borderWidth: 1,
+                        data: returns.map(r => r.value),
+                        backgroundColor: ['red', 'orange', 'green']
                     }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
                 }
             });
-        }
-        
-        function navigateTo(page) {
-            window.location.href = page;
         }
     </script>
 </body>
