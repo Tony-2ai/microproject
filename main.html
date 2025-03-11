@@ -12,23 +12,37 @@
             background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
             color: #ffffff;
             display: flex;
-            height: 100vh;
+            flex-direction: column;
+            min-height: 100vh;
             margin: 0;
             overflow: hidden;
         }
         .container {
             display: flex;
+            flex-direction: column;
             width: 100%;
-            height: 100vh;
+            flex: 1;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
         }
         .sidebar {
-            width: 250px;
+            width: 100%;
             background: rgba(20, 20, 20, 0.9);
             padding: 20px;
-            border-right: 2px solid #444;
-            box-shadow: 5px 0px 15px rgba(255, 204, 0, 0.5);
-            height: 100vh;
+            border-bottom: 2px solid #444;
+            box-shadow: 0px 5px 15px rgba(255, 204, 0, 0.5);
             overflow-y: auto;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 250px;
+                border-bottom: none;
+                border-right: 2px solid #444;
+                box-shadow: 5px 0px 15px rgba(255, 204, 0, 0.5);
+            }
         }
         .sidebar h3 {
             color: #ffcc00;
@@ -67,6 +81,9 @@
             margin: 20px;
             box-shadow: 0px 0px 20px rgba(255, 204, 0, 0.5);
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .input-container {
             margin-bottom: 20px;
@@ -76,7 +93,8 @@
         }
         input {
             padding: 12px;
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
             border-radius: 8px;
             border: none;
             text-align: center;
@@ -107,9 +125,18 @@
             background: rgba(38, 38, 38, 0.8);
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(255, 204, 0, 0.7);
+            width: 100%;
+            max-width: 600px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: auto;
         }
         canvas {
-            margin-top: 20px;
+            width: 100% !important;
+            height: auto !important;
         }
     </style>
 </head>
@@ -130,7 +157,9 @@
                 <button onclick="calculateReturns()">Show Suggestions</button>
             </div>
             <div class="returns-container" id="returnsInfo"></div>
-            <canvas id="investmentChart"></canvas>
+            <div class="chart-container">
+                <canvas id="investmentChart"></canvas>
+            </div>
         </div>
     </div>
     <script>
@@ -157,6 +186,15 @@
                         data: returns.map(r => r.value),
                         backgroundColor: ['red', 'orange', 'green']
                     }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
             });
         }
