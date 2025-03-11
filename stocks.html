@@ -83,6 +83,17 @@
             font-weight: bold;
             box-shadow: 0 0 10px rgba(0, 204, 255, 0.8);
         }
+        .ai-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #00ccff;
+            color: black;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+        }
         .chat-window {
             display: none;
             position: fixed;
@@ -92,7 +103,6 @@
             background: #1a1a1a;
             border-radius: 10px;
             padding: 10px;
-            box-shadow: 0 0 15px rgba(0, 204, 255, 0.8);
         }
         .chat-window textarea {
             width: 100%;
@@ -108,7 +118,6 @@
             padding: 5px;
             background: #00ccff;
             border: none;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -136,24 +145,7 @@
         <div id="chatOutput"></div>
     </div>
     
-    <script>
-        function showStockBrokers() {
-            window.location.href = 'broker.html';
-        }
-
-        function toggleAssistant() {
-            var chatWindow = document.getElementById('chatWindow');
-            chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function sendChat() {
-            var input = document.getElementById('chatInput').value;
-            var output = document.getElementById('chatOutput');
-            var response = "AI Response: Based on your query, here are some stock insights.";
-            output.innerHTML += `<p><b>You:</b> ${input}</p><p>${response}</p>`;
-            document.getElementById('chatInput').value = '';
-        }
-    </script>
+ 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Stocks in India</title>
@@ -273,6 +265,35 @@
     </div>
     
     <script>
+         function toggleAssistant() {
+            var chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendChat() {
+            var input = document.getElementById('chatInput').value;
+            var output = document.getElementById('chatOutput');
+            var response = "AI Response: Based on your query, here are some stock insights.";
+            if (input.toLowerCase().includes('top stocks')) {
+                response = "AI Response: The top stocks today are Reliance, TCS, Infosys, and HDFC Bank.";
+            } else if (input.toLowerCase().includes('market trend')) {
+                response = "AI Response: The market is currently bullish with Nifty 50 showing an upward trend.";
+            } else if (input.toLowerCase().includes('investment advice')) {
+                response = "AI Response: Diversify your investments across sectors to minimize risk.";
+            } else if (input.toLowerCase().includes('best time to buy')) {
+                response = "AI Response: Buying during market dips or corrections can be a good strategy.";
+            } else {
+                response = "AI Response: I can help with stock insights, trends, and investment tips. Try asking about 'top stocks' or 'market trend'.";
+            }
+            output.innerHTML += `<p><b>You:</b> ${input}</p><p>${response}</p>`;
+            document.getElementById('chatInput').value = '';
+            speak(response);
+        }
+
+        function speak(text) {
+            let speech = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(speech);
+        }
         function renderCharts() {
             const ctx = document.getElementById('stockChart').getContext('2d');
             const sensexCtx = document.getElementById('sensexNiftyChart').getContext('2d');
