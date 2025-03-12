@@ -171,11 +171,11 @@
                 return;
             }
             let returns = [
-                { type: 'Stock Market', value: Math.round(amount * 2.5), risk: 'High' },
-                { type: 'Gold', value: Math.round(amount * 1.8), risk: 'Medium' },
-                { type: 'Real Estate', value: Math.round(amount * 2.2), risk: 'Low' }
+                { type: 'Stock Market', value: Math.round(amount * 2.5), duration: '5 Months', risk: 'High' },
+                { type: 'Gold', value: Math.round(amount * 1.8), duration: '1-2 years', risk: 'Medium' },
+                { type: 'Real Estate', value: Math.round(amount * 2.2), duration: '4 years', risk: 'Low' }
             ];
-            document.getElementById('returnsInfo').innerHTML = returns.map(r => `<p>${r.type}: ₹${r.value} - <strong style="color: ${r.risk === 'High' ? 'red' : r.risk === 'Medium' ? 'orange' : 'green'}">Risk: ${r.risk}</strong></p>`).join('');
+            document.getElementById('returnsInfo').innerHTML = returns.map(r => `<p>${r.type}: ₹${r.value} - <strong style="color: ${r.risk === 'High' ? 'red' : r.risk === 'Medium' ? 'orange' : 'green'}">Risk: ${r.risk}</strong> - Duration: ${r.duration}</p>`).join('');
             let ctx = document.getElementById('investmentChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
