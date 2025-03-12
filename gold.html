@@ -45,11 +45,50 @@
             font-size: 1.5em;
             text-shadow: 0 0 15px rgba(255, 215, 0, 1);
         }
+        .latest-news, .historical-data, .gold-calculator {
+            margin-top: 30px;
+        }
+        .latest-news h2, .historical-data h2, .gold-calculator h2 {
+            color: #FFD700;
+        }
+        .latest-news ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .latest-news li {
+            background: rgba(50, 50, 50, 0.9);
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .gold-calculator input {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(50, 50, 50, 0.9);
+            color: white;
+        }
+        .gold-calculator button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            background: #FFD700;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+        .gold-calculator button:hover {
+            background: #FFBF00;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Live Gold Market Watch</h1>
+        <p>Stay updated with the latest gold rates and trends</p>
         <div class="section">
             <h2>Current Gold Rate</h2>
             <p class="glow-text">₹<span id="goldPrice">Loading...</span> per gram</p>
@@ -57,6 +96,24 @@
         <div class="section">
             <h2>Gold Price Trends</h2>
             <canvas id="goldChart" width="400" height="200"></canvas>
+        </div>
+        <div class="latest-news section">
+            <h2>Latest News</h2>
+            <ul id="newsList">
+                <li>Gold prices surge as investors seek safe-haven assets</li>
+                <li>Central banks increase gold reserves amid economic uncertainty</li>
+                <li>Analysts predict a steady rise in gold prices for the next quarter</li>
+            </ul>
+        </div>
+        <div class="historical-data section">
+            <h2>Historical Gold Prices</h2>
+            <canvas id="historicalChart" width="400" height="200"></canvas>
+        </div>
+        <div class="gold-calculator section">
+            <h2>Gold Calculator</h2>
+            <input type="number" id="goldWeight" placeholder="Enter weight in grams">
+            <button onclick="calculateGoldValue()">Calculate Value</button>
+            <p class="glow-text">Value: ₹<span id="goldValue">0</span></p>
         </div>
     </div>
     
@@ -101,13 +158,61 @@
             });
         }
 
+        function renderHistoricalChart() {
+            const historicalCtx = document.getElementById('historicalChart').getContext('2d');
+            new Chart(historicalCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Historical Gold Prices (per gram)',
+                        data: [4500, 4600, 4700, 4800, 4900, 5000],
+                        borderColor: '#FFD700',
+                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: 'white'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         function fetchGoldPrice() {
             document.getElementById('goldPrice').innerText = '5000'; // Mock Data
+        }
+
+        function calculateGoldValue() {
+            const goldWeight = document.getElementById('goldWeight').value;
+            const goldPrice = 5000; // Mock Data
+            const goldValue = goldWeight * goldPrice;
+            document.getElementById('goldValue').innerText = goldValue;
         }
 
         window.onload = function() {
             renderGoldChart();
             fetchGoldPrice();
+            renderHistoricalChart();
         };
     </script>
 </body>
