@@ -1,203 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic Investment Suggester</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@300;400;700&display=swap');
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            flex: 1;
-        }
-        @media (min-width: 768px) {
-            .container {
-                flex-direction: row;
-            }
-        }
-        .sidebar {
-            width: 100%;
-            background: rgba(20, 20, 20, 0.9);
-            padding: 20px;
-            border-bottom: 2px solid #444;
-            box-shadow: 0px 5px 15px rgba(255, 204, 0, 0.5);
-            overflow-y: auto;
-        }
-        @media (min-width: 768px) {
-            .sidebar {
-                width: 250px;
-                border-bottom: none;
-                border-right: 2px solid #444;
-                box-shadow: 5px 0px 15px rgba(255, 204, 0, 0.5);
-            }
-        }
-        .sidebar h3 {
-            color: #ffcc00;
-            text-align: center;
-            text-shadow: 0px 0px 10px rgba(255, 204, 0, 0.8);
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            padding: 15px;
-            margin: 10px 0;
-            text-align: center;
-            font-weight: bold;
-            background: rgba(38, 38, 38, 0.8);
-            border-radius: 10px;
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-            color: #ffcc00;
-            box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.5);
-        }
-        .sidebar ul li:hover {
-            background: #ffcc00;
-            color: black;
-            transform: scale(1.1);
-            box-shadow: 0px 0px 20px rgba(255, 204, 0, 0.9);
-        }
-        .content {
-            flex: 1;
-            padding: 40px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            margin: 20px;
-            box-shadow: 0px 0px 20px rgba(255, 204, 0, 0.5);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .input-container {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        input {
-            padding: 12px;
-            width: 100%;
-            max-width: 300px;
-            border-radius: 8px;
-            border: none;
-            text-align: center;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            transition: 0.3s;
-            outline: none;
-            box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.5);
-        }
-        button {
-            padding: 12px 20px;
-            margin-top: 10px;
-            border-radius: 8px;
-            border: none;
-            background: #ffcc00;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.5);
-            font-size: 16px;
-            color: #000;
-        }
-        .returns-container {
-            margin-top: 20px;
-            font-size: 18px;
-            padding: 20px;
-            background: rgba(38, 38, 38, 0.8);
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(255, 204, 0, 0.7);
-            width: 100%;
-            max-width: 600px;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-        }
-        canvas {
-            width: 100% !important;
-            height: auto !important;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Futuristic Investment Suggester</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@300;400;700&display=swap');
+
+    /* Animate the background gradient */
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: linear-gradient(-45deg, #000000, #0d47a1, #000000);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      flex: 1;
+    }
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
+    }
+    
+    /* Sidebar with slide-in animation */
+    .sidebar {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-bottom: 2px solid #0d47a1;
+      box-shadow: 0px 5px 15px rgba(0, 136, 255, 0.5);
+      overflow-y: auto;
+      animation: slideIn 1s ease forwards;
+    }
+    @media (min-width: 768px) {
+      .sidebar {
+        width: 250px;
+        border-bottom: none;
+        border-right: 2px solid #0d47a1;
+        box-shadow: 5px 0px 15px rgba(0, 136, 255, 0.5);
+      }
+    }
+    @keyframes slideIn {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .sidebar h3 {
+      color: #00aaff;
+      text-align: center;
+      text-shadow: 0px 0px 10px rgba(0, 136, 255, 0.8);
+      margin-bottom: 15px;
+    }
+    
+    /* Live clock with a subtle blink animation */
+    #liveClock {
+      margin: 15px 0;
+      font-size: 18px;
+      color: #00aaff;
+      text-align: center;
+      animation: blink 1.5s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      padding: 15px;
+      margin: 10px 0;
+      text-align: center;
+      font-weight: bold;
+      background: rgba(0, 0, 50, 0.8);
+      border-radius: 10px;
+      cursor: pointer;
+      color: #00aaff;
+      box-shadow: 0px 0px 10px rgba(0, 136, 255, 0.5);
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+    /* Staggered delays for sidebar list items */
+    .sidebar ul li:nth-child(1) { animation-delay: 0.3s; }
+    .sidebar ul li:nth-child(2) { animation-delay: 0.5s; }
+    .sidebar ul li:nth-child(3) { animation-delay: 0.7s; }
+    .sidebar ul li:nth-child(4) { animation-delay: 0.9s; }
+    
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    
+    /* Hover animation (pulse) on sidebar items */
+    .sidebar ul li:hover {
+      background: #00aaff;
+      color: #001f3f;
+      transform: scale(1.1);
+      box-shadow: 0px 0px 20px rgba(0, 136, 255, 0.9);
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1.1); }
+      50% { transform: scale(1.15); }
+    }
+    
+    /* Content area with a slide-up fade-in animation */
+    .content {
+      flex: 1;
+      padding: 40px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      margin: 20px;
+      box-shadow: 0px 0px 20px rgba(0, 136, 255, 0.5);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: slideUp 1s ease forwards;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .input-container {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    input {
+      padding: 12px;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+      border: none;
+      text-align: center;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      transition: 0.3s;
+      outline: none;
+      box-shadow: 0px 0px 10px rgba(0, 136, 255, 0.5);
+    }
+    input:focus {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.02);
+    }
+    
+    button {
+      padding: 12px 20px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #00aaff;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      box-shadow: 0px 0px 10px rgba(0, 136, 255, 0.5);
+      font-size: 16px;
+      color: #001f3f;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    
+    .reset-button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #00aaff;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      box-shadow: 0px 0px 10px rgba(0, 136, 255, 0.5);
+      font-size: 14px;
+      color: #001f3f;
+    }
+    .reset-button:hover {
+      transform: scale(1.05);
+    }
+    
+    .returns-container {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 136, 255, 0.7);
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      margin: 20px auto; /* Centering the chart container */
+    }
+    
+    .tips-container {
+      margin-top: 20px;
+      font-size: 16px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 136, 255, 0.7);
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    canvas {
+      display: block; /* Ensures canvas is a block element */
+      margin: auto;   /* Centers the canvas within its container */
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h3>Investment Insights</h3>
-            <ul>
-                <li onclick="navigateTo('broker.html')">Top Stock Brokers</li>
-                <li onclick="navigateTo('stocks.html')">High-Return Stocks</li>
-                <li onclick="navigateTo('gold.html')">Gold Rates</li>
-                <li onclick="navigateTo('realestate.html')">Real Estate Trends</li>
-            </ul>
-        </div>
-        <div class="content">
-            <div class="input-container">
-                <input type="number" id="investmentAmount" placeholder="Enter amount in ₹">
-                <button onclick="calculateReturns()">Show Suggestions</button>
-            </div>
-            <div class="returns-container" id="returnsInfo"></div>
-            <div class="chart-container">
-                <canvas id="investmentChart"></canvas>
-            </div>
-        </div>
+  <div class="container">
+    <div class="sidebar">
+      <h3>Investment Insights</h3>
+      <div id="liveClock"></div>
+      <ul>
+        <li onclick="navigateTo('broker.html')">Top Stock Brokers</li>
+        <li onclick="navigateTo('stocks.html')">High-Return Stocks</li>
+        <li onclick="navigateTo('gold.html')">Gold Rates</li>
+        <li onclick="navigateTo('realestate.html')">Real Estate Trends</li>
+      </ul>
     </div>
-    <script>
-        function navigateTo(page) { window.location.href = page; }
-        function calculateReturns() {
-            let amount = document.getElementById('investmentAmount').value;
-            if (!amount || amount <= 0) {
-                alert("Please enter a valid amount.");
-                return;
+    <div class="content">
+      <div class="input-container">
+        <input type="number" id="investmentAmount" placeholder="Enter amount in ₹">
+        <button onclick="calculateReturns()">Show Suggestions</button>
+        <button class="reset-button" onclick="resetForm()">Reset</button>
+      </div>
+      <div class="returns-container" id="returnsInfo"></div>
+      <div class="chart-container">
+        <canvas id="investmentChart"></canvas>
+      </div>
+      <div class="tips-container" id="tipsInfo">
+        <!-- An investment tip will appear here -->
+      </div>
+    </div>
+  </div>
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+    
+    // Live Clock Feature
+    function updateClock() {
+      const clockElement = document.getElementById('liveClock');
+      const now = new Date();
+      clockElement.innerText = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+    
+    // Calculate Returns, Update Chart, and Display Investment Tip
+    function calculateReturns() {
+      let amount = document.getElementById('investmentAmount').value;
+      if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+      
+      // Projected returns calculations
+      const returnsData = [
+        { type: 'Stock Market', value: Math.round(amount * 2.5), duration: '5 Months', risk: 'High' },
+        { type: 'Gold', value: Math.round(amount * 1.8), duration: '1-2 Years', risk: 'Medium' },
+        { type: 'Real Estate', value: Math.round(amount * 2.2), duration: '4 Years', risk: 'Low' }
+      ];
+      
+      // Update returns container with projections
+      document.getElementById('returnsInfo').innerHTML = returnsData
+        .map(r => `<p>${r.type}: ₹${r.value} - <strong style="color: ${r.risk === 'High' ? 'red' : r.risk === 'Medium' ? 'orange' : 'green'}">Risk: ${r.risk}</strong> - Duration: ${r.duration}</p>`)
+        .join('');
+      
+      // Create or refresh the Chart.js bar chart
+      let ctx = document.getElementById('investmentChart').getContext('2d');
+      if (window.investmentChartInstance) {
+        window.investmentChartInstance.destroy();
+      }
+      window.investmentChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: returnsData.map(r => r.type),
+          datasets: [{
+            label: 'Projected Returns (₹)',
+            data: returnsData.map(r => r.value),
+            backgroundColor: ['red', 'orange', 'green']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
             }
-            let returns = [
-                { type: 'Stock Market', value: Math.round(amount * 2.5), duration: '5 Months', risk: 'High' },
-                { type: 'Gold', value: Math.round(amount * 1.8), duration: '1-2 years', risk: 'Medium' },
-                { type: 'Real Estate', value: Math.round(amount * 2.2), duration: '4 years', risk: 'Low' }
-            ];
-            document.getElementById('returnsInfo').innerHTML = returns.map(r => `<p>${r.type}: ₹${r.value} - <strong style="color: ${r.risk === 'High' ? 'red' : r.risk === 'Medium' ? 'orange' : 'green'}">Risk: ${r.risk}</strong> - Duration: ${r.duration}</p>`).join('');
-            let ctx = document.getElementById('investmentChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: returns.map(r => r.type),
-                    datasets: [{
-                        label: 'Projected Returns (₹)',
-                        data: returns.map(r => r.value),
-                        backgroundColor: ['red', 'orange', 'green']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
+          }
         }
-    </script>
+      });
+      
+      // Investment tips feature
+      const tips = [
+        "Diversify your portfolio across different asset classes.",
+        "Invest for the long term with a steady approach.",
+        "Monitor market trends and adjust your strategy accordingly.",
+        "Avoid impulsive decisions; always do thorough research.",
+        "Consider your risk tolerance and financial goals before investing."
+      ];
+      const randomTip = tips[Math.floor(Math.random() * tips.length)];
+      document.getElementById('tipsInfo').innerHTML = `<p><em>Tip:</em> ${randomTip}</p>`;
+    }
+    
+    function resetForm() {
+      document.getElementById('investmentAmount').value = '';
+      document.getElementById('returnsInfo').innerHTML = '';
+      document.getElementById('tipsInfo').innerHTML = '';
+      if (window.investmentChartInstance) {
+        window.investmentChartInstance.destroy();
+      }
+    }
+  </script>
 </body>
 </html>
