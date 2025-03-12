@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Estate Trends - Kerala</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
         body {
@@ -14,6 +15,11 @@
             text-align: center;
             padding: 20px;
             overflow-x: hidden;
+            transition: background 0.5s, color 0.5s;
+        }
+        .light-mode {
+            background: #f4f4f4;
+            color: black;
         }
         .container {
             max-width: 1000px;
@@ -25,39 +31,42 @@
             margin: 15px;
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 212, 255, 0.9);
-            transition: transform 0.3s ease-in-out;
         }
-        .section:hover {
+        .toggle-btn, button {
+            background: #00d4ff;
+            color: black;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .toggle-btn:hover, button:hover {
+            background: #00aacc;
             transform: scale(1.05);
         }
-        h1 {
-            color: #00d4ff;
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
-        }
-        .property-card {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        .property {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            width: 280px;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-        .property:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 1);
-        }
-        canvas {
-            margin-top: 20px;
-            background: #222;
+        #map {
+            height: 300px;
+            width: 100%;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+        }
+        input, textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #00d4ff;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            text-align: center;
+        }
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
     </style>
 </head>
@@ -65,34 +74,40 @@
     <div class="container">
         <h1>Real Estate Market Watch - Kerala</h1>
         
+        <button class="toggle-btn" onclick="toggleTheme()">Toggle Dark/Light Mode</button>
+
         <div class="section">
-            <h2>Current Trends</h2>
-            <canvas id="realEstateChart" width="400" height="200"></canvas>
+            <h2>Market Overview</h2>
+            <p>Kerala's real estate market has been growing steadily with increasing demand for properties.</p>
         </div>
 
         <div class="section">
-            <h2>Featured Properties in Kerala</h2>
-            <div class="property-card">
-                <div class="property">
-                    <h3>Luxury Villa - Kochi</h3>
-                    <p>Price: ₹2.5 Cr</p>
-                    <p>Area: 3500 sqft</p>
-                </div>
-                <div class="property">
-                    <h3>Beachfront Apartment - Kovalam</h3>
-                    <p>Price: ₹1.8 Cr</p>
-                    <p>Area: 2000 sqft</p>
-                </div>
-                <div class="property">
-                    <h3>Hill View Bungalow - Munnar</h3>
-                    <p>Price: ₹3 Cr</p>
-                    <p>Area: 4000 sqft</p>
-                </div>
-                <div class="property">
-                    <h3>Commercial Space - Trivandrum</h3>
-                    <p>Price: ₹5 Cr</p>
-                    <p>Area: 5000 sqft</p>
-                </div>
+            <h2>Real Estate Trends</h2>
+            <canvas id="realEstateChart"></canvas>
+        </div>
+
+        <div class="section">
+            <h2>Property Locations</h2>
+            <div id="map"></div>
+        </div>
+
+        <div class="section">
+            <h2>Mortgage Calculator</h2>
+            <input type="number" id="loanAmount" placeholder="Loan Amount (₹)">
+            <input type="number" id="interestRate" placeholder="Interest Rate (%)">
+            <input type="number" id="years" placeholder="Years">
+            <button onclick="calculateEMI()">Calculate EMI</button>
+            <p id="emiResult"></p>
+        </div>
+
+        <div class="section">
+            <h2>Subscribe to Updates</h2>
+            <input type="email" id="email" placeholder="Enter your email">
+            <button onclick="subscribeNewsletter()">Subscribe</button>
+            <p id="subscriptionMessage"></p>
+            <div id="subscriptionDetails" style="display: none; margin-top: 10px;">
+                <p>Thank you for subscribing!</p>
+                <p>You will receive weekly updates on market trends, new property listings, and investment tips.</p>
             </div>
         </div>
     </div>
@@ -105,37 +120,60 @@
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                     datasets: [{
-                        label: 'Real Estate Price Index',
+                        label: 'Price Index',
                         data: [120, 125, 130, 128, 135, 140],
                         borderColor: '#00d4ff',
                         backgroundColor: 'rgba(0, 212, 255, 0.2)',
-                        fill: true,
-                        tension: 0.3
+                        fill: true
                     }]
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: 'white'
-                            }
-                        }
-                    },
                     scales: {
-                        x: {
-                            ticks: {
-                                color: 'white'
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                color: 'white'
-                            }
-                        }
+                        x: { ticks: { color: 'white' } },
+                        y: { ticks: { color: 'white' } }
                     }
                 }
             });
+        }
+        
+        function initMap() {
+            const locations = [
+                { lat: 9.9312, lng: 76.2673, title: "Kochi" },
+                { lat: 8.5241, lng: 76.9366, title: "Trivandrum" },
+                { lat: 11.2588, lng: 75.7804, title: "Calicut" }
+            ];
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 10.8505, lng: 76.2711 },
+                zoom: 7
+            });
+            locations.forEach(loc => {
+                new google.maps.Marker({
+                    position: { lat: loc.lat, lng: loc.lng },
+                    map: map,
+                    title: loc.title
+                });
+            });
+        }
+
+        function calculateEMI() {
+            let amount = parseFloat(document.getElementById('loanAmount').value) || 0;
+            let rate = parseFloat(document.getElementById('interestRate').value) / 100 / 12 || 0;
+            let months = parseInt(document.getElementById('years').value) * 12 || 0;
+            let emi = months ? (amount * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1) : 0;
+            document.getElementById('emiResult').innerText = `EMI: ₹${emi.toFixed(2)} per month`;
+        }
+        
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
+        
+        function subscribeNewsletter() {
+            let email = document.getElementById('email').value;
+            document.getElementById('subscriptionMessage').innerText = email.includes('@') ? `Subscribed with ${email}` : "Invalid email address.";
+            if (email.includes('@')) {
+                document.getElementById('subscriptionDetails').style.display = 'block';
+            }
         }
 
         window.onload = function() {
